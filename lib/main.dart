@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List listText = ['A', 'B', 'C', 'D'];
   List text = [];
   List textRow = [];
-  Color target = Colors.white;
+  List target = [Colors.black45];
 
   late int i;
 
@@ -51,103 +51,116 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: listA.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 1.35, crossAxisCount: 3),
-                    itemBuilder: (BuildContext context, index) {
-                      return Draggable<Color>(
-                        data: listA[index] == 'A' ? Colors.lime : listA[index],
-                        feedback: Container(
-                          padding: listA[index] == Colors.black
+            flex: 1,
+            child: GridView.builder(
+                shrinkWrap: true,
+                itemCount: listA.length,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 1.35, crossAxisCount: 4),
+                itemBuilder: (BuildContext context, index) {
+                  return Draggable<Color>(
+                    data: listA[index] == 'A' ? Colors.white : listA[index],
+                    feedback: Container(
+                      padding: listA[index] == Colors.black
+                          ? const EdgeInsets.all(8)
+                          : listA[index] == Colors.brown
                               ? const EdgeInsets.all(8)
                               : const EdgeInsets.all(0),
-                          height: 120,
-                          width: 120,
-                          color:
-                              listA[index] == 'A' ? Colors.lime : listA[index],
-                          child: listA[index] == Colors.black
+                      height: 120,
+                      width: 120,
+                      color: listA[index] == 'A' ? Colors.white : listA[index],
+                      child: listA[index] == Colors.black
+                          ? Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.white,
+                              child: const Center(child: Text('Column')),
+                            )
+                          : listA[index] == Colors.brown
                               ? Container(
                                   height: 40,
                                   width: 100,
                                   color: Colors.white,
-                                  child: const Center(child: Text('Row')),
+                                  child: const Center(child: Text('row')),
                                 )
-                              : null,
-                        ),
-                        child: Container(
-                          padding: listA[index] == Colors.black
-                              ? const EdgeInsets.all(8)
-                              : listA[index] == Colors.brown
-                                  ? const EdgeInsets.all(8)
-                                  : const EdgeInsets.all(0),
-                          height: 120,
-                          width: 120,
-                          color:
-                              listA[index] == 'A' ? Colors.lime : listA[index],
-                          child: listA[index] == Colors.black
-                              ? Container(
-                                  height: 40,
-                                  width: 100,
-                                  color: Colors.white,
-                                  child: const Center(child: Text('Row')),
-                                )
-                              : listA[index] == Colors.brown
-                                  ? Container(
-                                      height: 40,
-                                      width: 100,
-                                      color: Colors.white,
-                                      child:
-                                          const Center(child: Text('Column')),
-                                    )
+                              : listA[index] == 'A'
+                                  ? Center(child: Text('A'))
                                   : null,
-                        ),
-                      );
-                    }),
-              ],
-            ),
+                    ),
+                    child: Container(
+                      padding: listA[index] == Colors.black
+                          ? const EdgeInsets.all(8)
+                          : listA[index] == Colors.brown
+                              ? const EdgeInsets.all(8)
+                              : const EdgeInsets.all(0),
+                      height: 120,
+                      width: 120,
+                      color: listA[index] == 'A' ? Colors.white : listA[index],
+                      child: listA[index] == Colors.black
+                          ? Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.white,
+                              child: const Center(child: Text('Column')),
+                            )
+                          : listA[index] == Colors.brown
+                              ? Container(
+                                  height: 40,
+                                  width: 100,
+                                  color: Colors.white,
+                                  child: const Center(child: Text('row')),
+                                )
+                              : listA[index] == 'A'
+                                  ? Center(child: Text('A'))
+                                  : null,
+                    ),
+                  );
+                }),
           ),
           Expanded(
+              flex: 3,
               child: DragTarget(
-            builder: (context, candidates, rejects) {
-              print(candidates);
-              return Stack(
-                children: [
-                  target == Colors.green
-                      ? Container(
-                          height: 100,
-                          width: 100,
-                          color: Colors.green,
-                        )
-                      : target == Colors.lime
+                builder: (context, candidates, rejects) {
+                  print('$candidates $target');
+
+                  return Stack(
+                    children: [
+                      target.contains(Colors.green) == true
                           ? Container(
-                              child: Center(child: Text('A')),
+                              height: 100,
+                              width: 100,
+                              color: Colors.green,
                             )
-                          : target == Colors.black
-                              ? targetColumn()
-                              : target == Colors.brown
-                                  ? targetRow()
-                                  : Container(
-                                      child: Text('Drag here'),
-                                    ),
-                  if (candidates.isNotEmpty)
-                    Container(
-                      color: Color(int.parse('0xff3aa9f78f')),
-                      height: MediaQuery.of(context).size.shortestSide,
-                    )
-                ],
-              );
-            },
-            onAccept: (Color value) {
-              print(value);
-              value = target;
-            },
-          ))
+                          : target.contains(Colors.white) == true
+                              ? Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: Center(child: Text('A')),
+                                )
+                              : target.contains(Colors.black) == true
+                                  ? targetColumn()
+                                  : target.contains(Colors.brown) == true
+                                      ? targetRow()
+                                      : Container(
+                                          height: 100,
+                                          child: Text('Drag here'),
+                                        ),
+                      if (candidates.isNotEmpty)
+                        Container(
+                          color: Color(int.parse('0xff3aa9f78f')),
+                          height: 100,
+                        )
+                    ],
+                  );
+                },
+                onAccept: (value) {
+                  print(value);
+                  setState(() {
+                    target[0] = value;
+                  });
+                },
+              ))
         ],
       ),
     );
@@ -159,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return Stack(
           children: [
             Container(
+              height: MediaQuery.of(context).size.height,
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -170,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: EdgeInsets.all(8.0),
                           child: Center(child: Text('Drag here')),
                         )
-                      : listB[index] == Colors.black
+                      : listB[index] == Colors.brown
                           ? SizedBox(height: 100, child: targetRow())
                           : DragTarget(
                               builder: (context, accept, rejects) {
@@ -178,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                     color: listB[index] == 'A'
-                                        ? Colors.lime
+                                        ? Colors.white
                                         : listB[index],
                                     child: text.isEmpty
                                         ? const Text('')
@@ -206,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print('value: $value');
         setState(() {
           listB.add(value);
-          value == Colors.lime ? text.add('A') : text.add('');
+          value == Colors.white ? text.add('A') : text.add('');
         });
       },
     );
@@ -218,8 +232,9 @@ class _MyHomePageState extends State<MyHomePage> {
         return Stack(
           children: [
             Container(
-              width: MediaQuery.of(context).size.shortestSide,
+              width: MediaQuery.of(context).size.width,
               child: ListView.builder(
+                shrinkWrap: true,
                 // physics: const NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: listBRow.isEmpty ? 1 : listBRow.length,
@@ -240,7 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                     color: listBRow[index] == 'A'
-                                        ? Colors.lime
+                                        ? Colors.white
                                         : listBRow[index],
                                     child: textRow.isEmpty
                                         ? const Text('')
@@ -268,7 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
       onAccept: (value) {
         setState(() {
           listBRow.add(value);
-          value == Colors.lime ? textRow.add('A') : textRow.add('');
+          value == Colors.white ? textRow.add('A') : textRow.add('');
         });
       },
     );
